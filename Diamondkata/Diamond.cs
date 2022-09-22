@@ -1,44 +1,38 @@
 ﻿
+using Diamondkata;
 using System.Text;
 namespace DiamondKata
 {
-    public class Diamond
+    public class Diamond : IDiamond
     {
         private const char upperFirstLetter = 'A';
         private const char lowerFirstLetter = 'a';
         private const string lineSeparator = "\n";
-        private static int position;
-        private static int ASCIIKey;
+        private int position;
+        private int ASCIIKey;
         private const string space = "   ";
 
-        private static void Main(string[] args)
-        {
-            Console.Write("Enter the letter : ");
 
-
-            char character = Console.ReadLine()[0];
-            string diamond = CreateDiamond(character);
-            Console.WriteLine(diamond);
-            Console.ReadLine();
-
-        }
 
         /// <summary>
         /// this method is used to decide the character case to draw the diamond shape
         /// </summary>
         /// <param name="character"></param>
-        public static string CreateDiamond(char character)
+        public string PopulateDiamond(char character)
         {
-            if (!char.IsLetter(character)) { return "Given input is not an alphabet : "; }
+            if (!IsLetter(character)) { return "Given input is not an alphabet : "; }
 
-            if (character is upperFirstLetter or lowerFirstLetter) return character.ToString();
+            if (IsUserInput_Is_Character_A(character))
+            {
+                return character.ToString();
+            }
 
             position = char.ToUpper(character) - 64;
+            
             //condtion to check the whether character is uppercase or lowercase base up on that it prints characters diamond
             ASCIIKey = char.IsUpper(character) ? 65 : 97;
 
-            StringBuilder diamondtext = new StringBuilder();
-
+            var diamondtext = new StringBuilder();
             for (int level = 0; level <= (2 * position) - 1; level++)
             {
                 diamondtext.Append(DrawDiamond(level));
@@ -47,15 +41,31 @@ namespace DiamondKata
             return diamondtext.ToString();
         }
 
+        
+        /// <summary>
+        /// this method is used to check whether the input is character or not
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns></returns>
+        public bool IsLetter(char character) {
+            return char.IsLetter(character);
+        }
+
+        /// <summary>
+        /// this method is used to check whether the user input is alphabet 'A' then we can directly return it as output
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns></returns>
+        public bool IsUserInput_Is_Character_A(char character) {
+            return character is upperFirstLetter or lowerFirstLetter;
+        }
 
         /// <summary>
         /// this method is used to draw the diamonds shape
         /// </summary>
         /// <param name="level"></param>
-        public static StringBuilder DrawDiamond(int level)
+        public StringBuilder DrawDiamond(int level)
         {
-            StringBuilder diamondline = new StringBuilder();
-
             string text;
             int index;
 
@@ -72,6 +82,7 @@ namespace DiamondKata
 
             const int margin = 2;
             string shape = new string(' ', (2 * index) + margin);
+            var diamondline = new StringBuilder();
             diamondline.Append(string.Concat(shape, text, lineSeparator));
             return diamondline;
         }
