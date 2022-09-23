@@ -37,7 +37,7 @@ namespace Diamondkata.Test
         [TestMethod]
         public void PrintDiamond_with_letter_B()
         {
-            const string output = "    A\n  B   B\n    A\n      \n";
+            const string output = "-A-\nB-B\n-A-";
             Assert.AreEqual(output, diamond.PopulateDiamond('B'));
         }
 
@@ -47,7 +47,7 @@ namespace Diamondkata.Test
         [TestMethod]
         public void PrintDiamond_with_number()
         {
-            const string output = "Given input is not an alphabet : ";
+            const string output = "Given input is not an alphabet.";
             Assert.AreEqual(output, diamond.PopulateDiamond('4'));
         }
     }

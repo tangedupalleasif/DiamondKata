@@ -1,6 +1,5 @@
 ﻿
 using Diamondkata;
-using System.Text;
 namespace DiamondKata
 {
     public class Diamond : IDiamond
@@ -10,9 +9,8 @@ namespace DiamondKata
         private const string lineSeparator = "\n";
         private int position;
         private int ASCIIKey;
-        private const string space = "   ";
-
-
+        private const char space = '-';
+        private int maxCharacters;
 
         /// <summary>
         /// this method is used to decide the character case to draw the diamond shape
@@ -20,7 +18,7 @@ namespace DiamondKata
         /// <param name="character"></param>
         public string PopulateDiamond(char character)
         {
-            if (!IsLetter(character)) { return "Given input is not an alphabet : "; }
+            if (!IsLetter(character)) { return "Given input is not an alphabet."; }
 
             if (IsUserInput_Is_Character_A(character))
             {
@@ -28,26 +26,59 @@ namespace DiamondKata
             }
 
             position = char.ToUpper(character) - 64;
-            
+
+            maxCharacters = (2 * position) - 1;
+
             //condtion to check the whether character is uppercase or lowercase base up on that it prints characters diamond
             ASCIIKey = char.IsUpper(character) ? 65 : 97;
 
-            var diamondtext = new StringBuilder();
-            for (int level = 0; level <= (2 * position) - 1; level++)
+            var pyramid = new List<string>();
+            for (int level = 0; level < position; level++)
             {
-                diamondtext.Append(DrawDiamond(level));
+                pyramid.Add(Pyramid(level));
             }
-
-            return diamondtext.ToString();
+            
+            var diamond = FullDiamond(pyramid);
+            return diamond;
         }
 
-        
+        /// <summary>
+        /// this method is used to draw the Pyramid shape
+        /// </summary>
+        /// <param name="level"></param>
+        public string Pyramid(int level)
+        {
+            int padding = maxCharacters / 2 - level;
+            int middlePadding = level == 0 ? 0 : maxCharacters - ((padding * 2) + 2);
+
+            string paddingCharacters = new(space, padding);
+            string middleCharacters = new(space, middlePadding);
+
+            char inputCharacter = (char)(level + ASCIIKey);
+            string pyramid = level == 0 ? paddingCharacters + inputCharacter + paddingCharacters : paddingCharacters + inputCharacter + middleCharacters + inputCharacter + paddingCharacters;
+
+            return pyramid;
+        }
+
+        /// <summary>
+        /// this method is used to draw the full diamond by reversing the first half of diamond shape
+        /// </summary>
+        /// <param name="firstHalfDiamond"></param>
+        /// <returns></returns>
+        public string FullDiamond(List<string> pyramid)
+        {
+            var halfDiamond = string.Join(lineSeparator, pyramid);
+            pyramid.Reverse();
+            return halfDiamond + lineSeparator + string.Join(lineSeparator, pyramid.Skip(1));
+        }
+
         /// <summary>
         /// this method is used to check whether the input is character or not
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
-        public bool IsLetter(char character) {
+        public bool IsLetter(char character)
+        {
             return char.IsLetter(character);
         }
 
@@ -56,35 +87,11 @@ namespace DiamondKata
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
-        public bool IsUserInput_Is_Character_A(char character) {
+        public bool IsUserInput_Is_Character_A(char character)
+        {
             return character is upperFirstLetter or lowerFirstLetter;
         }
 
-        /// <summary>
-        /// this method is used to draw the diamonds shape
-        /// </summary>
-        /// <param name="level"></param>
-        public StringBuilder DrawDiamond(int level)
-        {
-            string text;
-            int index;
 
-            if (level < position)
-            {
-                index = position - level - 1;
-                text = string.Join(space, new string((char)(level + ASCIIKey), level + 1).ToCharArray());
-            }
-            else
-            {
-                index = level - position + 1;
-                text = string.Join(space, new string((char)(position - index + ASCIIKey - 1), position - index).ToCharArray());
-            }
-
-            const int margin = 2;
-            string shape = new string(' ', (2 * index) + margin);
-            var diamondline = new StringBuilder();
-            diamondline.Append(string.Concat(shape, text, lineSeparator));
-            return diamondline;
-        }
     }
 }

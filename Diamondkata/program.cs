@@ -7,10 +7,12 @@ namespace Diamondkata
         private static void Main(string[] args)
         {
             Console.Write("Enter the letter : ");
-            IDiamond diamond = new Diamond();
-
-            char character = Console.ReadLine()[0];
-            string diamondShape = diamond.PopulateDiamond(character);
+            Diamond diamond = new Diamond();
+            char userInput = (char)Console.Read();
+            
+            if (!char.IsLetter(userInput)) { Console.Write("Please enter a character.");return; }
+            
+            string diamondShape = diamond.PopulateDiamond(userInput);
             Console.WriteLine(diamondShape);
             Console.ReadLine();
 
